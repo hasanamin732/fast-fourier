@@ -4,7 +4,7 @@ from fft import FFT2D
 
 N = int(2**10)
 x = np.linspace(0,10,N)
-y = np.sin(8*x)
+y = np.sin(8*x)+np.sin(11*x)
 
 obj = FFT2D(y)
 
@@ -12,7 +12,16 @@ res2 = obj.fft1d(y)
 res=np.fft.fft(y)
 res_real = np.abs(res)
 res_real2 = np.abs(res2)
-print(res_real2[:N // 2]==res_real[:N // 2])
+# print(res_real2==res_real)
+
+comparison = res_real2 == res_real
+
+# Calculate the percentage of True values
+percentage_equal = np.count_nonzero(comparison) / len(comparison) * 100
+
+print(f"Percentage of equal values: {percentage_equal:.2f}%")
+print(np.argwhere(res_real > 349))
+print(np.argwhere(res_real2 > 349))
 
 fig, ax = plt.subplots(1, 2, figsize=(12, 5))
 
@@ -35,5 +44,3 @@ ax[1].set_xlabel('Frequency')
 
 plt.tight_layout()
 plt.show()
-
-# print(np.argwhere(res_real > 20))
