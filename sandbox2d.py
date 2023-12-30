@@ -14,7 +14,7 @@ res=np.fft.fft2(data)
 res1=np.fft.ifft2(res)
 res4=obj.fft2d()
 # res2=obj.fft2d().ifft2d()
-res2=res4.ifft2d()
+res2=res4.ifft2d(data.shape)
 res3=res1-res2
 print(res2)
 plt.figure(figsize=(10, 5))

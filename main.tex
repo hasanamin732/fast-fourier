@@ -1,0 +1,33 @@
+\documentclass[11pt]{article}
+
+\title{Python-based Image Processing with FFT}
+\author{Hasan Amin}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+The Fast Fourier Transform (FFT) 
+is an algorithmic breakthrough 
+that expedites the calculation 
+of the Discrete Fourier Transform 
+(DFT) from \(O(N^2)\) to \(O(N \log N)\) complexity, where \(N\) signifies the dataset size. By swiftly converting time-domain signals into their frequency domain counterparts, FFT revolutionized signal processing by significantly reducing computational demands. This efficiency enables rapid analysis of signal frequencies, finding extensive applications in various fields like image processing, telecommunications, and scientific research, where rapid and efficient frequency analysis is paramount.
+
+\section{Abstract}
+This project focuses on implementing the Fast fourier
+ Transformation in python and then use it for various
+  Image processing tasks
+
+\section{Mathematical Background}
+\subsection{Discrete Fourier Transformation (DFT)}
+The DFT takes in a sequence of complex values and breaks them into their constituent frequencies in terms of sines and cosines.
+\[ X_k = \sum_{n=0}^{N-1} x_n \cdot e^{\frac{-i2\pi kn}{N}} \] where $X_k$ represents the \(k\)-\(th\)
+frequency component of the signal or image. This transformation breaks down a sequence of complex values $x_n$ into its constituent frequencies, revealing the amplitude and phase information of each frequency within the signal. This form of signal can be processed for instance the frequecies can be averaged and reduce the overall size of the array.Moreover filters can be applied to sharpen or blur the image. % add ref
+
+\subsection{Inverse Discrete Fourier Transformation (IDFT)}
+The IDFT reverses the effect of DFT and returns us the original signal sequence
+\[ x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k \cdot e^{\frac{i2\pi kn}{N}} \]
+
+
+
+\end{document}
