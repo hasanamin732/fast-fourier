@@ -1,7 +1,8 @@
 from Gaussian import *
 from matplotlib import image, pyplot as plt
+# from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-
+# from fft import FFT2D
 # # Load image as pixel array
 # img = image.imread('kingfisher_gray.jpg')
 
@@ -30,7 +31,7 @@ if image.ndim == 3:
     image = np.mean(image, axis=2)
 
 # Apply the Gaussian low-pass filter
-filtered_image = gaussian_low_pass_filter(image, sigma=0.5)
+filtered_image = gaussian_low_pass_filter(image, sigma=50,ifft=True)
 
 # Display original and filtered images
 plt.figure(figsize=(10, 5))
@@ -40,7 +41,32 @@ plt.title('Original Image')
 
 plt.subplot(1, 2, 2)
 plt.imshow(filtered_image, cmap='gray')
-plt.title('Filtered Image')
+plt.title('Blurred Image')
 
 plt.tight_layout()
 plt.show()
+
+# rows, cols = raw_fft.shape
+# # freq_rows, freq_cols = np.meshgrid(np.arange(rows), np.arange(cols))
+# freq_rows, freq_cols = np.meshgrid(np.fft.fftshift(np.arange(-rows//2, rows//2)), np.fft.fftshift(np.arange(-cols//2, cols//2)))
+# freq_rows=freq_rows.T
+# freq_cols=freq_cols.T
+# fig = plt.figure(figsize=(12, 6))
+
+# ax1 = fig.add_subplot(121, projection='3d')
+# ax1.plot_surface(freq_rows, freq_cols, np.abs(raw_fft), cmap='viridis')
+# ax1.set_title('Raw FFT Magnitude')
+# ax1.set_xlabel('Frequency (cols)')
+# ax1.set_ylabel('Frequency (rows)')
+# ax1.set_zlabel('Magnitude')
+
+# # Plotting the filtered FFT
+# ax2 = fig.add_subplot(122, projection='3d')
+# ax2.plot_surface(freq_cols, freq_rows, np.abs(filtered_image_fft), cmap='viridis')
+# ax2.set_title('Filtered FFT Magnitude')
+# ax2.set_xlabel('Frequency (cols)')
+# ax2.set_ylabel('Frequency (rows)')
+# ax2.set_zlabel('Magnitude')
+
+# plt.tight_layout()
+# plt.show()

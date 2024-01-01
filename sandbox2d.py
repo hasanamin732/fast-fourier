@@ -9,13 +9,16 @@ data = np.array([
         [13,14,15,16]
     ])
 
-obj=FFT2D(data)
 res=np.fft.fft2(data)
 res1=np.fft.ifft2(res)
+
+obj=FFT2D(data)
 res4=obj.fft2d()
-# res2=obj.fft2d().ifft2d()
+# res4=FFT2D(res4)
+# res2=obj.fft2d().ifft2d(data.shape)
 res2=res4.ifft2d(data.shape)
 res3=res1-res2
+# res3=res-res4.array
 print(res2)
 plt.figure(figsize=(10, 5))
 # plt.subplot(1, 3, 1)
