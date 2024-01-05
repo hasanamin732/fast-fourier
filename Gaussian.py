@@ -38,22 +38,27 @@ def gaussian_low_pass_filter(image, sigma, kernel_size=None, truncate=4.0, ifft=
     else:
         return filtered_image_fft, image_fft
 
-def filter(image,Do=10,ifft=True):
+def filter(image,Do=10,ifft=True,low_pass=True):
     image_obj = FFT2D(image)
     image_fft = image_obj.fft2d()
     M,N=image_fft.array.shape
-    H=np.zeros((M,N),dtype=np.float32)
+    L=np.zeros((M,N),dtype=np.float32)
     for u in range(M):
         for v in range(N):
             D=np.sqrt((u-M/2)**2 + (v-N/2)**2)
-            H[u,v]=np.exp(-D**2/(2*Do**2))
-    filtered_image_fft=(image_fft*FFT2D(H)).ifftshift()
-
-    if ifft:
-        filtered_image = np.abs(filtered_image_fft.ifft2d(image.shape))
-        return filtered_image
+            L[u,v]=np.exp(-D**2/(2*Do**2))
+            H=1-L
+    if low_pass:
+        filtered_image_fft=(image_fft*FFT2D(L)).ifftshift()
+    
     else:
-        return filtered_image_fft, image_fft
+        filtered_image_fft=(image_fft*FFT2D(H)).ifftshift()
+
+        if ifft:
+            filtered_image = np.abs(filtered_image_fft.ifft2d(image.shape))
+            return filtered_image
+        else:
+            return filtered_image_fft, image_fft
 
 
 

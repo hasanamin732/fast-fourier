@@ -14,7 +14,7 @@ if image.ndim == 3:
 # Apply the Gaussian low-pass filter
 filtered_image_scipy = scipy_gaussian_low_pass_filter(image, sigma=1,ifft=True)
 # filtered_image = gaussian_low_pass_filter(image, sigma=1,ifft=True)
-filtered_image=filter(image,Do=100)
+filtered_image=filter(image,Do=10,low_pass=False)
 # Display original and filtered images
 plt.figure(figsize=(10, 5))
 plt.subplot(1, 3, 1)
