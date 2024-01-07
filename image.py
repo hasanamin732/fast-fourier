@@ -26,7 +26,7 @@ def main(imgpath:str,my_sigma:float,main_low_pass:bool):
 
     plt.subplot(1, 2, 2)
     plt.imshow(filtered_image, cmap='gray')
-    plt.title(f'Blurred Image with $\sigma$ {my_sigma}')
+    plt.title(f'Blurred Image with $\sigma$={my_sigma}')
     plt.tight_layout()
     plt.show()
 
@@ -88,5 +88,5 @@ def fft_graph(imgpath:str,my_sigma:float,main_low_pass:bool):
     plt.show()
 
 if __name__=="__main__":
-    fft_graph('rose_gray.jpg',100,False)
+    main('kingfisher.jpg',15,True)
 
