@@ -1,58 +1,92 @@
 from Gaussian import *
-from matplotlib import image, pyplot as plt
+from matplotlib import pyplot as plt
 # from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 
+def main(imgpath:str,my_sigma:float,main_low_pass:bool):
+    image = plt.imread(imgpath)  # Read the image
 
-image = plt.imread('rose_gray.jpg')  # Read the image
+    # Convert to grayscale if it's a color image
+    if image.ndim == 3:
+        image = np.mean(image, axis=2)
+    
+    if my_sigma==0:
+        my_sigma=10
+        print("Zero is not allowed for sigma, running on default value 10")
 
-# Convert to grayscale if it's a color image
-if image.ndim == 3:
-    image = np.mean(image, axis=2)
+    # Apply the Gaussian low-pass filter
+    
+    filtered_image=gaussian_filter(image,sigma=my_sigma,low_pass=main_low_pass)
+    # Display original and filtered images
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.imshow(image, cmap='gray')
+    plt.title('Original Image')
 
-# Apply the Gaussian low-pass filter
-filtered_image_scipy = scipy_gaussian_low_pass_filter(image, sigma=1,ifft=True)
-# filtered_image = gaussian_low_pass_filter(image, sigma=1,ifft=True)
-filtered_image=filter(image,Do=10,low_pass=False)
-# Display original and filtered images
-plt.figure(figsize=(10, 5))
-plt.subplot(1, 3, 1)
-plt.imshow(image, cmap='gray')
-plt.title('Original Image')
+    plt.subplot(1, 2, 2)
+    plt.imshow(filtered_image, cmap='gray')
+    plt.title(f'Blurred Image with $\sigma$ {my_sigma}')
+    plt.tight_layout()
+    plt.show()
 
-plt.subplot(1, 3, 2)
-plt.imshow(filtered_image, cmap='gray')
-plt.title('Blurred Image')
+def fft_visual(imgpath:str,my_sigma:float,main_low_pass:bool):
+    image = plt.imread(imgpath)  # Read the image
 
-plt.subplot(1, 3, 3)
-plt.imshow(filtered_image_scipy, cmap='gray')
-plt.title('Scipy Blurred Image')
+    # Convert to grayscale if it's a color image
+    if image.ndim == 3:
+        image = np.mean(image, axis=2)
 
-plt.tight_layout()
-plt.show()
+    if my_sigma==0:
+        my_sigma=10
+        print("Zero is not allowed for sigma, running on default value 10")
+    # Apply the Gaussian low-pass filter
+    
+    filtered_image_fft,image_fft=gaussian_filter(image,sigma=my_sigma,low_pass=main_low_pass,ifft=False)
+    plt.figure(figsize=(12, 6))
 
-# rows, cols = raw_fft.shape
-# # freq_rows, freq_cols = np.meshgrid(np.arange(rows), np.arange(cols))
-# freq_rows, freq_cols = np.meshgrid(np.fft.fftshift(np.arange(-rows//2, rows//2)), np.fft.fftshift(np.arange(-cols//2, cols//2)))
-# freq_rows=freq_rows.T
-# freq_cols=freq_cols.T
-# fig = plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.imshow(np.log(np.abs(image_fft.array) + 1), cmap='gray')  # Log magnitude of original image FFT
+    plt.title('Original Image FFT Magnitude')
+    plt.colorbar()
 
-# ax1 = fig.add_subplot(121, projection='3d')
-# ax1.plot_surface(freq_rows, freq_cols, np.abs(raw_fft), cmap='viridis')
-# ax1.set_title('Raw FFT Magnitude')
-# ax1.set_xlabel('Frequency (cols)')
-# ax1.set_ylabel('Frequency (rows)')
-# ax1.set_zlabel('Magnitude')
+    plt.subplot(1, 2, 2)
+    plt.imshow(np.log(np.abs(filtered_image_fft) + 1), cmap='gray')  # Log magnitude of filtered image FFT
+    plt.title(f'Filtered Image FFT Magnitude with $\sigma$={my_sigma}')
+    plt.colorbar()
 
-# # Plotting the filtered FFT
-# ax2 = fig.add_subplot(122, projection='3d')
-# ax2.plot_surface(freq_cols, freq_rows, np.abs(filtered_image_fft), cmap='viridis')
-# ax2.set_title('Filtered FFT Magnitude')
-# ax2.set_xlabel('Frequency (cols)')
-# ax2.set_ylabel('Frequency (rows)')
-# ax2.set_zlabel('Magnitude')
+    plt.tight_layout()
+    plt.show()
 
-# plt.tight_layout()
-# plt.show()
+def fft_graph(imgpath:str,my_sigma:float,main_low_pass:bool):
+    image = plt.imread(imgpath)  # Read the image
+
+    # Convert to grayscale if it's a color image
+    if image.ndim == 3:
+        image = np.mean(image, axis=2)
+    if my_sigma==0:
+        my_sigma=10
+        print("Zero is not allowed for sigma, running on default value 10")
+    # Apply the Gaussian low-pass filter
+    
+    filtered_image_fft,image_fft=gaussian_filter(image,sigma=my_sigma,low_pass=main_low_pass,ifft=False)
+    
+    # Extract a row/column from the FFT images to visualize the peaks before and after filtering
+    row_to_visualize = 100  # You can choose a row or column to visualize
+    fft_row_original = np.abs(image_fft.array[row_to_visualize, :])
+    fft_row_filtered = np.abs(filtered_image_fft[row_to_visualize, :])
+
+    # Plotting the profiles of the FFT peaks before and after filtering
+    plt.figure(figsize=(10, 6))
+    plt.plot(np.arange(len(fft_row_original)), fft_row_original, label='Original FFT')
+    plt.plot(np.arange(len(fft_row_filtered)), fft_row_filtered, label='Filtered FFT')
+    plt.title(f'1D Profile of FFT Peaks (Row {row_to_visualize}), $\sigma$={my_sigma}')
+    plt.xlabel('Frequency')
+    plt.ylabel('Amplitude')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+if __name__=="__main__":
+    fft_graph('rose_gray.jpg',100,False)
+
