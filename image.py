@@ -88,5 +88,5 @@ def fft_graph(imgpath:str,my_sigma:float,main_low_pass:bool):
     plt.show()
 
 if __name__=="__main__":
-    main('kingfisher.jpg',15,True)
+    main('rose_gray.jpg',25,True)
 
