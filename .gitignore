@@ -1,0 +1,4 @@
+/.vscode/*
+/report/*
+!/report/main.pdf
+/__pycache__/*
