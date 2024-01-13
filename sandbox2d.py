@@ -1,39 +1,45 @@
-import matplotlib.pyplot as plt
 import numpy as np
-from fft import FFT2D
+import timeit
+import matplotlib.pyplot as plt
+from fft import FFT2D  # Assuming you have FFT2D implemented in the fft module
 
-data = np.array([
-        [1, 2, 3,10],
-        [4, 5, 6,11],
-        [7, 8, 9,12],
-        [13,14,15,16],
-        [13,14,15,16]
-    ])
+def dft(x):
+    N = len(x)
+    n = np.arange(N)
+    k = n.reshape((N, 1))
+    e = np.exp(-2j * np.pi * k * n / N)
+    X = np.dot(e, x)
+    return X
 
-res=np.fft.fft2(data)
-res1=np.fft.ifft2(res)
+def fft(x):
+    x_obj = FFT2D(x)
+    return x_obj._fft1d(x)
 
-obj=FFT2D(data)
-res4=obj.fft2d()
-# res4=FFT2D(res4)
-# res2=obj.fft2d().ifft2d(data.shape)
-res2=res4.ifft2d(data.shape)
-res3=res1-res2
-# res3=res-res4.array
-print(res2)
-plt.figure(figsize=(10, 5))
-# plt.subplot(1, 3, 1)
-# plt.imshow(res1.real, cmap='viridis')
-# plt.title('NumPy FFT Magnitude')
+def measure_time_efficiency(func, array_lengths):
+    execution_times = []
 
-# plt.subplot(1, 3, 2)
-# plt.imshow(res2.real, cmap='viridis')
-# plt.title('Custom FFT Magnitude')
+    for length in array_lengths:
+        x = np.random.random(length)  # Generate a random array of given length
 
-# plt.subplot(1, 3, 3)
-plt.imshow(res3.real,cmap='Oranges_r')
-plt.title("Error")
+        # Measure the execution time
+        time_taken = timeit.timeit(lambda: func(x), number=10) / 10  # Taking the average of 10 runs
+        execution_times.append(time_taken)
 
-plt.tight_layout()
-plt.colorbar()
-plt.show()
+    return execution_times
+
+def plot_results(array_lengths, dft_times, fft_times):
+    plt.plot(array_lengths, dft_times, label='DFT')
+    plt.plot(array_lengths, fft_times, label='FFT')
+    plt.xlabel('Array Length')
+    plt.ylabel('Execution Time (seconds)')
+    plt.legend()
+    plt.title('Time Efficiency Comparison: DFT vs FFT')
+    plt.show()
+
+if __name__ == "__main__":
+    array_lengths = 2**np.arange(5, 10)  # Add more lengths as needed
+
+    dft_times = measure_time_efficiency(dft, array_lengths)
+    fft_times = measure_time_efficiency(fft, array_lengths)
+
+    plot_results(array_lengths, dft_times, fft_times)
