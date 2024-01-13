@@ -27,5 +27,5 @@ This Python script provides functionalities for efficient image processing using
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/yourusername/yourrepository.git
-   cd yourrepository
+   git clone https://github.com/hasanamin732/fast-fourier
+   cd fast-fourier
